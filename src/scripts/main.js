@@ -5,16 +5,14 @@
 
 // логіка перемикання мови
 
-// Глобальні змінні, які можна знайти відразу
-const email = document.querySelector('.questions__email');
-const message = document.querySelector('.questions__message');
-
 let currentLang = localStorage.getItem('lang') || 'en';
 
 function setLanguage(lang) {
   const langs = document.querySelectorAll('.page__lang');
   const iconEN = document.querySelectorAll('.icon-en');
   const iconUA = document.querySelectorAll('.icon-ua');
+  const email = document.querySelector('.questions__email');
+  const message = document.querySelector('.questions__message');
 
   // Захист: міняємо плейсхолдери лише якщо елементи форми знайдені на сторінці
   if (email && message) {
@@ -35,22 +33,12 @@ function setLanguage(lang) {
     }
   });
 
-  if (lang === 'en') {
-    iconEN.forEach((icon) => {
-      icon.style.display = 'block';
-    });
+  for (const icon of iconEN) {
+    icon.style.display = lang === 'en' ? 'block' : 'none';
+  }
 
-    iconUA.forEach((icon) => {
-      icon.style.display = 'none';
-    });
-  } else {
-    iconEN.forEach((icon) => {
-      icon.style.display = 'none';
-    });
-
-    iconUA.forEach((icon) => {
-      icon.style.display = 'block';
-    });
+  for (const icon of iconUA) {
+    icon.style.display = lang === 'ua' ? 'block' : 'none';
   }
 
   localStorage.setItem('lang', lang);
@@ -63,15 +51,15 @@ function toggleLanguage() {
   setLanguage(nextLang);
 }
 
-// Чекаємо повної побудови DOM-дерева сторінки перед запуском мовної логіки
+// Чекаємо завантаження DOM-структури Vite
 document.addEventListener('DOMContentLoaded', () => {
-  const activeIconsWrapper = document.querySelectorAll('.lang-icons');
+  const iconsWrapper = document.querySelectorAll('.lang-icons');
 
-  activeIconsWrapper.forEach((el) => {
+  iconsWrapper.forEach((el) => {
     el.addEventListener('click', toggleLanguage);
   });
 
-  // Запускаємо вибір мови, коли всі теги точно існують у вікні перегляду
+  // Перший запуск ініціалізації мови
   setLanguage(currentLang);
 });
 
@@ -151,24 +139,18 @@ function validateEmail(emailValue) {
 
 if (form && emailInput && successMessage) {
   form.addEventListener('submit', (e) => {
-    e.preventDefault(); // Скасовуємо перезавантаження сторінки
+    e.preventDefault();
 
-    // Прибираємо старі статуси помилки та успіху перед новою перевіркою
     emailInput.classList.remove('questions__email--error');
     successMessage.classList.remove('questions__success-message--visible');
 
-    // Перевіряємо валідність пошти
     if (!validateEmail(emailInput.value.trim())) {
-      // Якщо пошта неправильна — примусово додаємо клас
       emailInput.classList.add('questions__email--error');
 
-      return; // Зупиняємо виконання, форма НЕ скинеться
+      return;
     }
 
-    // 🎯 ЯКЩО ВСЕ ДОБРЕ: Показуємо зелене повідомлення про успіх
     successMessage.classList.add('questions__success-message--visible');
-
-    // Очищаємо форму
     form.reset();
   });
 
@@ -187,7 +169,6 @@ const menuItems = document.querySelectorAll('.menu__item');
 const menuButtons = document.querySelector('.menu__buttons');
 const buyBtn = document.querySelector('.menu__buy-button');
 
-// Захист від помилок на сторінках, де мобільного меню може не бути
 if (menuBtn && closeBtn && logo && menuButtons && buyBtn) {
   menuBtn.addEventListener('click', () => {
     menuItems.forEach((item, index) => {
