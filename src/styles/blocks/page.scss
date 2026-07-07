@@ -162,12 +162,13 @@
       animation: 0.6s linear infinite alternate-reverse scale;
     }
   }
+} // <--- Тут блок .page повністю закрився!
 
-  &__lang {
-    display: none;
-  }
+// Глобальні правила (повинні бути строго ПОЗА блоком .page)
+.page__lang {
+  display: none !important;
+}
 
-  &__lang.active {
-    display: inline;
-  }
+.page__lang.active {
+  display: inline-block !important; // inline-block краще підійде для збереження структури лінійних і блочних елементів
 }
