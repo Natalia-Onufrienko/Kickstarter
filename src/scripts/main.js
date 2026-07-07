@@ -51,16 +51,50 @@ function toggleLanguage() {
   setLanguage(nextLang);
 }
 
-// Чекаємо завантаження DOM-структури Vite
+function validateEmail(emailValue) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return re.test(String(emailValue).toLowerCase());
+}
+
+// Головна ініціалізація сайту після повного завантаження DOM
 document.addEventListener('DOMContentLoaded', () => {
   const iconsWrapper = document.querySelectorAll('.lang-icons');
+  const form = document.querySelector('#form');
+  const emailInput = document.querySelector('.questions__email');
+  const successMessage = document.querySelector('.questions__success-message');
 
+  // Навішуємо кліки на іконки перемикання мови
   iconsWrapper.forEach((el) => {
     el.addEventListener('click', toggleLanguage);
   });
 
-  // Перший запуск ініціалізації мови
+  // Запускаємо вибір мови при першому завантаженні сторінки
   setLanguage(currentLang);
+
+  // Валідація та скидання форми
+  if (form && emailInput && successMessage) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      emailInput.classList.remove('questions__email--error');
+      successMessage.classList.remove('questions__success-message--visible');
+
+      if (!validateEmail(emailInput.value.trim())) {
+        emailInput.classList.add('questions__email--error');
+
+        return;
+      }
+
+      successMessage.classList.add('questions__success-message--visible');
+      form.reset();
+    });
+
+    emailInput.addEventListener('input', () => {
+      emailInput.classList.remove('questions__email--error');
+      successMessage.classList.remove('questions__success-message--visible');
+    });
+  }
 });
 
 // оновлення лічильника слайдера
@@ -124,41 +158,6 @@ const swiper = new Swiper('.swiper', {
     delay: 3000,
   },
 });
-
-// Скидання форми та валідація Email
-
-const form = document.querySelector('#form');
-const emailInput = document.querySelector('.questions__email');
-const successMessage = document.querySelector('.questions__success-message');
-
-function validateEmail(emailValue) {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  return re.test(String(emailValue).toLowerCase());
-}
-
-if (form && emailInput && successMessage) {
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    emailInput.classList.remove('questions__email--error');
-    successMessage.classList.remove('questions__success-message--visible');
-
-    if (!validateEmail(emailInput.value.trim())) {
-      emailInput.classList.add('questions__email--error');
-
-      return;
-    }
-
-    successMessage.classList.add('questions__success-message--visible');
-    form.reset();
-  });
-
-  emailInput.addEventListener('input', () => {
-    emailInput.classList.remove('questions__email--error');
-    successMessage.classList.remove('questions__success-message--visible');
-  });
-}
 
 // Активація анімації в меню
 

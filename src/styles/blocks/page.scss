@@ -162,13 +162,14 @@
       animation: 0.6s linear infinite alternate-reverse scale;
     }
   }
-} // <--- Тут блок .page повністю закрився!
+}
 
-// Глобальні правила (повинні бути строго ПОЗА блоком .page)
+// 1. Повністю ховаємо абсолютно всі мовні блоки за замовчуванням
 .page__lang {
   display: none !important;
 }
 
+// 2. Показуємо ТІЛЬКИ той блок, який отримав клас active від JS
 .page__lang.active {
-  display: inline-block !important; // inline-block краще підійде для збереження структури лінійних і блочних елементів
+  display: inline-block !important; // для параграфів можна змінити на block
 }
