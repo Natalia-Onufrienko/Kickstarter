@@ -5,16 +5,17 @@
 
 // логіка перемикання мови
 
-const langs = document.querySelectorAll('.page__lang');
-const iconEN = document.querySelectorAll('.icon-en');
-const iconUA = document.querySelectorAll('.icon-ua');
-const iconsWrapper = document.querySelectorAll('.lang-icons');
+// Глобальні змінні, які можна знайти відразу
 const email = document.querySelector('.questions__email');
 const message = document.querySelector('.questions__message');
 
 let currentLang = localStorage.getItem('lang') || 'en';
 
 function setLanguage(lang) {
+  const langs = document.querySelectorAll('.page__lang');
+  const iconEN = document.querySelectorAll('.icon-en');
+  const iconUA = document.querySelectorAll('.icon-ua');
+
   // Захист: міняємо плейсхолдери лише якщо елементи форми знайдені на сторінці
   if (email && message) {
     if (lang === 'ua') {
@@ -62,11 +63,17 @@ function toggleLanguage() {
   setLanguage(nextLang);
 }
 
-iconsWrapper.forEach((el) => {
-  el.addEventListener('click', toggleLanguage);
-});
+// Чекаємо повної побудови DOM-дерева сторінки перед запуском мовної логіки
+document.addEventListener('DOMContentLoaded', () => {
+  const activeIconsWrapper = document.querySelectorAll('.lang-icons');
 
-setLanguage(currentLang);
+  activeIconsWrapper.forEach((el) => {
+    el.addEventListener('click', toggleLanguage);
+  });
+
+  // Запускаємо вибір мови, коли всі теги точно існують у вікні перегляду
+  setLanguage(currentLang);
+});
 
 // оновлення лічильника слайдера
 
@@ -170,6 +177,7 @@ if (form && emailInput && successMessage) {
     successMessage.classList.remove('questions__success-message--visible');
   });
 }
+
 // Активація анімації в меню
 
 const menuBtn = document.querySelector('.header__menu-icon');
